@@ -10,7 +10,7 @@ import (
 func Run(configPath string) {
 	conf.LoadTomlConfig(configPath)
 	logConfig := conf.Get().Log
-	logger.New(logConfig.LogName, logConfig.LogPath)
+	logger.Init(logConfig.LogName, logConfig.LogPath)
 	defer logger.Close()
 	appName := conf.Get().AppName
 	logger.Info(fmt.Sprintf("%s starting up ...", appName))

@@ -13,63 +13,39 @@ type Logger struct {
 	file    *os.File
 }
 
-var gLogger *Logger
+var logger *Logger
 
-func New(logName string, logPath string) *Logger {
+func Init(logName string, logPath string) {
 	fileName := fmt.Sprintf("%s-%s.log", logName, time.Now().Format("2006-01-02"))
 	filePath := path.Join(logPath, fileName)
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		panic(err)
 	}
-	logger := log.New(file, "", log.Ldate|log.Lmicroseconds|log.Llongfile)
-	return &Logger{
-		mLogger: logger,
+	mLogger := log.New(file, "", log.Ldate|log.Lmicroseconds|log.Llongfile)
+	logger = &Logger{
+		mLogger: mLogger,
 		file:    file,
 	}
 }
-
-func (logger *Logger) initLog(level string, msg string) {
+func writeLog(level string, msg string) {
 	logger.mLogger.Output(2, fmt.Sprintf("[%s]%s", level, msg))
 }
-func (logger *Logger) Debug(msg string) {
-	logger.initLog("DEBUG", msg)
-}
-func (logger *Logger) Info(msg string) {
-	logger.initLog("INFO", msg)
-}
-func (logger *Logger) Notice(msg string) {
-	logger.initLog("NOTICE", msg)
-}
-func (logger *Logger) Warn(msg string) {
-	logger.initLog("WARN", msg)
-}
-func (logger *Logger) Error(msg string) {
-	logger.initLog("ERROR", msg)
-}
-func (logger *Logger) Close() {
+func Close() {
 	logger.file.Close()
 }
 func Debug(msg string) {
-	gLogger.Debug(msg)
+	writeLog("DEBUT", msg)
 }
-
 func Info(msg string) {
-	gLogger.Info(msg)
+	writeLog("INFO", msg)
 }
-
 func Notice(msg string) {
-	gLogger.Notice(msg)
+	writeLog("NOTICE", msg)
 }
-
 func Warn(msg string) {
-	gLogger.Warn(msg)
+	writeLog("WARN", msg)
 }
-
 func Error(msg string) {
-	gLogger.Error(msg)
-}
-
-func Close() {
-	gLogger.Close()
+	writeLog("ERROR", msg)
 }
