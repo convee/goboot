@@ -1,6 +1,8 @@
 package conf
 
-import "github.com/BurntSushi/toml"
+import (
+	"github.com/BurntSushi/toml"
+)
 
 type Config struct {
 	AppName string `toml:"app_name"`
@@ -14,7 +16,10 @@ type Log struct {
 	LogPath string `toml:"log_path"`
 }
 type RedisConfig struct {
-	Address string
+	Address     string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout int64
 }
 
 type MysqlConfig struct {
