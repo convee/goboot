@@ -24,6 +24,7 @@ func newDb(config conf.MysqlConfig) *sql.DB {
 		config.Database,
 		config.Charset,
 	)
+	fmt.Println(dsn)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
