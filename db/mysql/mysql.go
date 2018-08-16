@@ -24,17 +24,14 @@ func newDb(config conf.MysqlConfig) *sql.DB {
 		config.Database,
 		config.Charset,
 	)
-	fmt.Println(dsn)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
-	defer db.Close()
+	// fmt.Println(dsn)
+	// defer db.Close()
 	db.SetMaxIdleConns(config.MaxIdle)                                     //设置闲置的连接数
 	db.SetMaxOpenConns(config.MaxOpen)                                     //设置最大打开的连接数，默认值0表示不限制
 	db.SetConnMaxLifetime(time.Duration(config.MaxLifetime) * time.Second) //设置长连接的最长使用时间（从创建时开始计算），超过该时间go会自动关闭该连接
-	if err := db.Ping(); err != nil {
-		panic(err)
-	}
 	return db
 }
