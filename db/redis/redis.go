@@ -22,39 +22,48 @@ func New(name string) *redis.Pool {
 	return pool
 }
 
-func Set(k, v string) {
+func Set(k, v string) (bool, error) {
 	c := pool.Get()
 	defer c.Close()
 	_, err := c.Do("SET", k, v)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
+	return true, nil
 }
 
-func Setnx(k, v string) {
+func Setnx(k, v string) (bool, error) {
 	c := pool.Get()
 	defer c.Close()
 	_, err := c.Do("SETNX", k, v)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
+	return true, nil
 }
 
-func Get(k string) (v string) {
+func Setex(k string, v string, ex int) (bool, error) {
 	c := pool.Get()
 	defer c.Close()
-	v, err := redis.String(c.Do("GET", k))
+	_, err := c.Do("SETEX", k, ex, v)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
-	return
+	return true, nil
 }
 
-func Expire(k string, ex int) {
+func Get(k string) (string, error) {
+	c := pool.Get()
+	defer c.Close()
+	return redis.String(c.Do("GET", k))
+}
+
+func Expire(k string, ex int) (bool, error) {
 	c := pool.Get()
 	defer c.Close()
 	_, err := c.Do("EXPIRE", k, ex)
 	if err != nil {
-		panic(err)
+		return false, err
 	}
+	return true, nil
 }
